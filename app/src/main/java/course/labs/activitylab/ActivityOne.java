@@ -1,5 +1,6 @@
 package course.labs.activitylab;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -12,24 +13,49 @@ public class ActivityOne extends Activity {
 
 		// string for logcat documentation
 		private final static String TAG = "Lab-ActivityOne";
-
+		private SharedPreferences prefs;
 		// lifecycle counts	
 		//TODO:
 		//Create 7 counter variables, each corresponding to a different one of the lifecycle callback methods.
 		// You will need to increment these variables' values when their corresponding lifecycle methods get called.  
-		private int onCreateCounter = 0;
-		private int onStartCounter = 0;
-		private int onResumeCounter = 0;
-		private int onPauseCounter = 0;
-		private int onStopCounter = 0;
-		private int onRestartCounter = 0;
-		private int onDestroyCounter = 0;
+		private int onCreateCounter, onStartCounter,onResumeCounter,onPauseCounter;
+		private int onStopCounter , onRestartCounter, onDestroyCounter;
 
 	@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_one);
-			
+
+
+
+			if(savedInstanceState != null)
+			{
+				onCreateCounter = savedInstanceState.getInt("onCreateCounter");
+				onStartCounter = savedInstanceState.getInt("onStartCounter");
+				onResumeCounter = savedInstanceState.getInt("onResumeCounter");
+				onPauseCounter = savedInstanceState.getInt("onPauseCounter");
+				onStopCounter = savedInstanceState.getInt("onStopCounter");
+				onRestartCounter = savedInstanceState.getInt("onRestartCounter");
+				onDestroyCounter = savedInstanceState.getInt("onDestroyCounter");
+			}
+			else {
+				onCreateCounter =0;
+				onStartCounter =0;
+				onResumeCounter = 0;
+				onPauseCounter =0;
+				onStopCounter=0;
+				onRestartCounter=0;
+				onDestroyCounter=0;
+			}
+		prefs = getPreferences(MODE_PRIVATE);
+		onCreateCounter = prefs.getInt("onCreateCounter",0);
+		onStartCounter = prefs.getInt("onStartCounter",0);
+		onResumeCounter = prefs.getInt("onResumeCounter",0);
+		onPauseCounter = prefs.getInt("onPauseCounter",0);
+		onRestartCounter = prefs.getInt("onRestartCounter",0);
+		onStopCounter = prefs.getInt("onStopCounter",0);
+		onDestroyCounter = prefs.getInt("onDestroyCounter",0);
+
 			//Log cat print out
 			Log.i(TAG, "onCreate called");
 			
@@ -38,7 +64,19 @@ public class ActivityOne extends Activity {
 				onCreateCounter++;
 			//update the view
 			TextView createTxtView = (TextView)findViewById(R.id.create);
-			createTxtView.setText(createTxtView.getText() +"" + onCreateCounter);
+			createTxtView.setText("onCreate() calls: "+ onCreateCounter);
+			TextView startTxtView = (TextView)findViewById(R.id.start);
+			startTxtView.setText("onStart() calls: " + onStartCounter);
+			TextView resumeTxtView = (TextView)findViewById(R.id.resume);
+			resumeTxtView.setText("onResume() calls: " + onResumeCounter);
+			TextView restartTxtView = (TextView)findViewById(R.id.restart);
+			restartTxtView.setText("onRestart() calls: " + onRestartCounter);
+			TextView pauseTxtView = (TextView)findViewById(R.id.pause);
+			pauseTxtView.setText("onPause() calls: " + onPauseCounter);
+			TextView stopTxtView = (TextView)findViewById(R.id.stop);
+			stopTxtView.setText("onStop() calls: "+ onStopCounter);
+			TextView destroyTxtView = (TextView)findViewById(R.id.destroy);
+			destroyTxtView.setText("onDestroy() calls: " + onDestroyCounter);
 		}
 
 		@Override
@@ -62,7 +100,8 @@ public class ActivityOne extends Activity {
 			onStartCounter++;
 			//update the view
 			TextView startTxtView = (TextView)findViewById(R.id.start);
-			startTxtView.setText(startTxtView.getText() +"" + onStartCounter);
+			startTxtView.setText("onStart() calls: " + onStartCounter);
+
 		}
 		@Override
 		public void onResume(){
@@ -72,7 +111,8 @@ public class ActivityOne extends Activity {
 			onResumeCounter++;
 			//update the view
 			TextView resumeTxtView = (TextView)findViewById(R.id.resume);
-			resumeTxtView.setText(resumeTxtView.getText() +"" + onResumeCounter);
+			resumeTxtView.setText("onResume() calls: " + onResumeCounter);
+
 		}
 		@Override
 		public void onRestart(){
@@ -82,7 +122,7 @@ public class ActivityOne extends Activity {
 			onRestartCounter++;
 			//update the view
 			TextView restartTxtView = (TextView)findViewById(R.id.restart);
-			restartTxtView.setText(restartTxtView.getText() +"" + onRestartCounter);
+			restartTxtView.setText("onRestart() calls: " + onRestartCounter);
 
 		}
 		@Override
@@ -93,7 +133,21 @@ public class ActivityOne extends Activity {
 			onPauseCounter++;
 			//update the view
 			TextView pauseTxtView = (TextView)findViewById(R.id.pause);
-			pauseTxtView.setText(pauseTxtView.getText() +"" + onPauseCounter);
+			pauseTxtView.setText("onPause() calls: " + onPauseCounter);
+			prefs = getPreferences(MODE_PRIVATE);
+			SharedPreferences.Editor editor = prefs.edit();
+
+			// set the key/value pairs
+			editor.putInt("onDestroyCounter",onDestroyCounter);
+			editor.putInt("onCreateCounter", onCreateCounter);
+			editor.putInt("onResumeCounter", onResumeCounter);
+			editor.putInt("onPauseCounter", onPauseCounter);
+			editor.putInt("onRestartCounter", onRestartCounter);
+			editor.putInt("onStopCounter", onStopCounter);
+			editor.putInt("onCreateCounter", onCreateCounter);
+
+			// don't forget to commit the changes
+			editor.commit();
 
 		}
 		@Override
@@ -104,7 +158,9 @@ public class ActivityOne extends Activity {
 			onStopCounter++;
 			//update the view
 			TextView stopTxtView = (TextView)findViewById(R.id.stop);
-			stopTxtView.setText(stopTxtView.getText() +"" + onStopCounter);
+			stopTxtView.setText("onStop() calls: "+ onStopCounter);
+
+
 
 		}
 		@Override
@@ -115,7 +171,7 @@ public class ActivityOne extends Activity {
 			onDestroyCounter++;
 			//update the view
 			TextView destroyTxtView = (TextView)findViewById(R.id.destroy);
-			destroyTxtView.setText(destroyTxtView.getText() +"" + onDestroyCounter);
+			destroyTxtView.setText("onDestroy() calls: " + onDestroyCounter);
 
 		}
 	    // TODO: implement 5 missing lifecycle callback methods
@@ -125,13 +181,40 @@ public class ActivityOne extends Activity {
 			//TODO:
 			// save state information with a collection of key-value pairs
 			// save all  count variables
+			savedInstanceState.putInt("onCreateCounter", onCreateCounter);
+			savedInstanceState.putInt("onStartCounter", onStartCounter);
+			savedInstanceState.putInt("onResumeCounter", onResumeCounter);
+			savedInstanceState.putInt("onPauseCounter", onPauseCounter);
+			savedInstanceState.putInt("onRestartCounter", onRestartCounter);
+			savedInstanceState.putInt("onStopCounter", onStopCounter);
+			savedInstanceState.putInt("onDestroyCounter", onDestroyCounter);
+			super.onSaveInstanceState(savedInstanceState);
+
 		}
 		
 		public void launchActivityTwo(View view) {
 			//TODO:
 			// This function launches Activity Two. 
 			// Hint: use Context’s startActivity() method.
+			Intent intent =  new Intent(this,ActivityTwo.class);
+			startActivity(intent);
 		}
-		
 
+	/* public void saveActivityInfo(View view) {
+
+		// SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		SharedPreferences.Editor editor = prefs.edit();
+
+		// set the key/value pairs
+		 editor.putInt("onDestroyCounter",onDestroyCounter);
+		 editor.putInt("onCreateCounter", onCreateCounter);
+		 editor.putInt("onResumeCounter", onResumeCounter);
+		 editor.putInt("onPauseCounter", onPauseCounter);
+		 editor.putInt("onRestartCounter", onRestartCounter);
+		 editor.putInt("onStopCounter", onStopCounter);
+		 editor.putInt("onCreateCounter", onCreateCounter);
+
+		// don't forget to commit the changes
+		editor.commit();
+	}*/
 }
